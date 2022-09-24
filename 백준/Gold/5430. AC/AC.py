@@ -1,36 +1,39 @@
-from collections import deque 
+import sys
 
-T = int(input())  # 테스트 케이스 
+input = sys.stdin.readline
+
+T = int(input())
 
 for _ in range(T):
-    
-    p = list(input().rstrip())  # 수행할 함수 (R : 배열의 순서 뒤집기 / D : 배열에서 첫 번째 수 버리기)
-    n = int(input())   # 배열에 들어있는 수의 개수
-    q = deque()
-    arr = input().rstrip()  # n개의 원소를 가진 배열을 q에 저장
-    if n > 0:
-        for i in arr[1:-1].split(","):
-            q.append(i)
-    
-    error = False  # 에러 발생여부
-    R_cnt = 0  # R이 나온 횟수
-    
-    for j in p:
-        if j == "R":
-            R_cnt += 1
-        elif j == "D" and len(q) == 0:
-            error = True
-            break 
-        else:
-            if R_cnt % 2 == 0:
-                q.popleft()
-            else:
-                q.pop() 
 
-    if R_cnt % 2 == 1:
-        q.reverse() 
-    
-    if error == True: 
-        print("error") 
+    func = list(input().rstrip())
+    n = int(input())
+    try:
+        L = list(map(int, input().rstrip()[1:-1].split(',')))
+    except:
+        L = []
+        state = 1
+
+    state = 0
+    flip = 0
+
+    for x in func:
+        if x == 'R':
+            flip += 1
+        elif x == 'D' and len(L) == 0:
+            state = 1
+            break
+        else:
+            if flip%2 == 1:
+                L.pop()
+            else:
+                L.pop(0)
+
+
+    if flip%2 == 1:
+        L.reverse()
+
+    if state == 0:
+        print("[" + ",".join(list(map(str, L))) + "]")
     else:
-        print("[" + ",".join(list(q)) + "]")
+        print('error')
