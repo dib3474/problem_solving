@@ -1,27 +1,29 @@
 #include <iostream>
-#include <algorithm>
 #include <vector>
+#include <algorithm>
 using namespace std;
 
-int max(vector<int>& vec) {
-    int result = -1001;
-    for (const int num : vec) {
-        result = (num > result) ? num : result;
-    }
-    return result;
-}
+int n;
+
+vector<int> dp;
+vector<int> v;
 
 int main() {
-    int n;
-    cin >> n;
-    vector<int> arr(n, 0);
-    for (int& num : arr) {
-        cin >> num;
-    }
-    vector<int> dp(n, 0);
-    dp[0] = arr[0];
-    for (int i = 1; i < n; i++) {
-        dp[i] = max((dp[i-1] + arr[i]), arr[i]);
-    }
-    cout << max(dp) << '\n';
+	ios::sync_with_stdio(0);
+    cin.tie(0);
+
+	cin >> n;
+
+	dp.assign(n, 0);
+	v.assign(n, 0);
+
+	for (auto &e : v) cin >> e;
+
+	dp[0] = v[0];
+
+	for (int i = 1; i < n; i++) {
+		dp[i] = max(dp[i - 1] + v[i], v[i]);
+	}
+
+	cout << *max_element(dp.begin(), dp.end());
 }
