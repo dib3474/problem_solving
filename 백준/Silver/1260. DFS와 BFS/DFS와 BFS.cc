@@ -1,59 +1,66 @@
 #include <iostream>
-#include <stack>
-#include <queue>
 #include <vector>
+#include <queue>
+#include <stack>
 #include <algorithm>
 using namespace std;
 
+int n, m, v;
 
+vector<vector<int>> graph;
+vector<int> visited;
+
+void dfs(int v) {
+	if (visited[v]) return ;
+	
+	cout << v << ' ';
+	
+	visited[v] = 1;
+
+	for (int e : graph[v]) {
+		dfs(e);
+	}
+}
+
+void bfs(int v) {
+	visited.assign(n + 1, 0);
+	queue<int> q;
+	q.push(v);
+	visited[v] = 1;
+
+	while (!q.empty()) {
+		int f = q.front(); q.pop();
+		cout << f << ' ';
+		for (int e : graph[f]) {
+			if (!visited[e]) {
+				q.push(e);
+				visited[e] = 1;
+			}
+		}
+	}
+}
 
 int main() {
-    int n, m, v;
-    cin >> n >> m >> v;
+	ios::sync_with_stdio(0);
+    cin.tie(0);
 
-    vector<vector<int>> graph(n+1);
-    
-    while(m--) {
-        int a, b;
-        cin >> a >> b;
-        graph[a].push_back(b);
-        graph[b].push_back(a);
-    }
+	cin >> n >> m >> v;
 
-    stack<int> dfs;
-    vector<bool> visited(n+1, false);
-    dfs.push(v);
-    while(!dfs.empty()) {
-        int top = dfs.top(); dfs.pop();
-        if (visited[top]) continue;
-        visited[top] = true;
-        
-        cout << top << " ";
-        sort(graph[top].begin(), graph[top].end(), greater<int>());
-        for(int e: graph[top]) {
-            if (!visited[e]) {
-                dfs.push(e);
-            }
-        }
-    }
-    cout << '\n';
+	graph.assign(n + 1, vector<int>());
+	visited.assign(n + 1, 0);
 
-    queue<int> bfs;
-    fill(visited.begin(), visited.end(), false);
-    bfs.push(v);
-    visited[v] = true;
-    while(!bfs.empty()) {
-        int top = bfs.front(); bfs.pop();
-        visited[top] = true;
+	for (int i = 0; i < m; i++) {
+		int a, b;
+		cin >> a >> b;
+		graph[a].push_back(b);
+		graph[b].push_back(a);
+	}
 
-        cout << top << " ";
-        sort(graph[top].begin(), graph[top].end(), less<int>());
-        for(int e: graph[top]) {
-            if (!visited[e]) {
-                visited[e] = true;
-                bfs.push(e);
-            }
-        }
-    }
-    
+	for (int i = 1; i <= n; i++) {
+		sort(graph[i].begin(), graph[i].end());
+	}
+
+	dfs(v);
+	cout << '\n';
+	bfs(v);
 }
