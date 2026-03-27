@@ -1,44 +1,42 @@
-#include <iostream>
-#include <numeric>
-#include <vector>
+#include <bits/stdc++.h>
 using namespace std;
 
-int Find(int a, vector<int>& parent) {
-    if (a == parent[a]) {
-        return a;
+int n, m;
+vector<int> parent;
+
+int find(int i) {
+    if (parent[i] == i) {
+        return parent[i];
     }
     else {
-        return parent[a] = Find(parent[a], parent);
+        parent[i] = find(parent[i]);
     }
+    return parent[i];
 }
 
-void Union(int a, int b, vector<int>& parent) {
-    a = Find(a, parent); b = Find(b, parent);
-    if (a == b) return;
-    else if (a < b) {
-        parent[b] = a;
-    }
-    else {
-        parent[a] = b;
-    }
+void merge(int i, int j) {
+    int a = find(i);
+    int b = find(j);
+    parent[b] = a;
 }
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
-    int n, m;
     cin >> n >> m;
+    parent.assign(n + 1, 0);
+    for (int i = 0; i <= n; i++) {
+        parent[i] = i;
+    }
 
-    vector<int> parent(n + 1);
-    iota(parent.begin(), parent.end(), 0);
+    while (m--) {
+        int c, a, b;
+        cin >> c >> a >> b;
 
-    while(m--) {
-        int cmd, a, b;
-        cin >> cmd >> a >> b;
-
-        if (cmd == 0) Union(a, b, parent);
-        else if (cmd == 1) {
-            if (Find(a, parent) == Find(b, parent)) cout << "YES\n";
-            else cout << "NO\n";
+        if (c) {
+            cout << ((find(a) == find(b)) ? "YES" : "NO") << '\n';
+        }
+        else {
+            merge(a, b);
         }
     }
 }
