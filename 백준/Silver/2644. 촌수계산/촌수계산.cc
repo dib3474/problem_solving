@@ -1,55 +1,41 @@
 #include <iostream>
 #include <vector>
-#include <algorithm>
-#include <numeric>
 using namespace std;
 
-int n, x, y, m;
-
-vector<vector<int>> graph;
 vector<int> visited;
-vector<int> parent;
-vector<pair<int, int>> arr;
+vector<vector<int>> graph;
+int a, b, result = -1;
 
-int result = -1;
-
-void dfs(int v, int dep) {
-    if (v == y) {
-        result = dep;
+void dfs(int start, int depth) {
+    if (start == b) {
+        result = depth;
         return;
     }
+    visited[start] = 1;
 
-    visited[v] = 1;
-
-    for (int e : graph[v]) {
+    for (auto e : graph[start]) {
         if (!visited[e]) {
-            dfs(e, dep + 1);
+            dfs(e, depth + 1);
         }
     }
 }
 
 int main() {
-	ios::sync_with_stdio(0);
-    cin.tie(0);
+    int n;
+    int m;
+    cin >> n >> a >> b >> m;
 
-	cin >> n >> x >> y >> m;
+    graph.assign(n + 1, vector<int>());
+    visited.assign(n + 1, 0);
+    
+    while (m--) {
+        int x, y;
+        cin >> x >> y;
+        graph[x].push_back(y);
+        graph[y].push_back(x);
+    }
 
-	graph.assign(n + 1, vector<int>());
-	visited.assign(n + 1, 0);
-	parent.assign(n + 1, 1);
-
-	parent[0] = 0;
-	for (int i = 0; i < m; i++) {
-		int a, b;
-		cin >> a >> b;
-		graph[a].push_back(b);
-		graph[b].push_back(a);
-		parent[b] = 0;
-	}
-
-	auto it = find(parent.begin(), parent.end(), 1);
-	
-	dfs(x, 0);
-
-	cout << result;
+    dfs(a, 0);
+    
+    cout << result << '\n';
 }
